@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from decouple import config
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -70,6 +73,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Authentication.wsgi.application'
 AUTH_USER_MODEL = 'accounts.Account'
+PASSWORD_RESET_TIMEOUT = 900
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -114,7 +118,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-import os
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -135,4 +139,4 @@ EMAIL_HOST = "smtp.gmail.com"
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = "Akhterali5323@gmail.com"
-EMAIL_HOST_PASSWORD = "akhter123"
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default="")

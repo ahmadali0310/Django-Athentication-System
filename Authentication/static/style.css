@@ -186,3 +186,17 @@ body {
   background-color: green;
   display: block;
 }
+
+.msg {
+  padding: 1rem 2.5rem;
+  color: white;
+  margin-bottom: 1rem;
+  box-shadow: 0 2rem 3rem 0 rgba(0, 0, 0, 0.2);
+}
+.success{
+  background-color: green;
+}
+
+.error{
+    background-color: green;
+}

@@ -79,7 +79,7 @@ form.addEventListener("submit", (e) => {
               // * This is for opacity transition;
               setTimeout(() => {
                 document.querySelector(".back_drop").classList.add("opacity");
-              }, 1000);
+              }, 500);
 
               //* Ajax Call Axios
               axios({
@@ -126,7 +126,7 @@ form.addEventListener("submit", (e) => {
                       document
                         .querySelector(".message")
                         .removeChild(document.querySelector(".message > p"));
-                    }, 10000);
+                    }, 3000);
                   }
                   // * It will run if there is any error
                   else if (res.data.error) {

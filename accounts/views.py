@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
+from django.contrib import messages
 from .models import Account
 from django.utils.encoding import force_bytes
 import json
+
 
 
 # * Verification email
@@ -30,19 +32,21 @@ def index(request):
         try:
             user = Account.objects.create_user(username=username, first_name=first_name, last_name=last_name, email=email, password=password)
             user.save()
-
-            current_site = get_current_site(request)
-            mail_subject = "Please Activate Your Account"
-            message = render_to_string("email_verification.html", {
-                "user": user,
-                "domain": current_site,
-                "uid" : urlsafe_base64_encode(force_bytes(user.pk)),
-                "token": default_token_generator.make_token(user)
-            })
-            to_email = email
-            send_email = EmailMessage(mail_subject, message, to=[to_email])
-            send_email.send()
-            return JsonResponse({'success': f"Activation Email has been sent to {email}"}, safe=False)
+            try:
+                current_site = get_current_site(request)
+                mail_subject = "Please Activate Your Account"
+                message = render_to_string("email_verification.html", {
+                    "user": user,
+                    "domain": current_site,
+                    "uid" : urlsafe_base64_encode(force_bytes(user.pk)),
+                    "token": default_token_generator.make_token(user)
+                })
+                to_email = email
+                send_email = EmailMessage(mail_subject, message, to=[to_email])
+                send_email.send()
+                return JsonResponse({'success': f"Activation Email has been sent to your Email."}, safe=False)
+            except:
+                return JsonResponse({'error': f"Activation Email Has Not Been Sent"}, safe=False)
         except:
             return JsonResponse({'error': f"Email has been already taken"}, safe=False)
 
@@ -61,11 +65,11 @@ def activate(request, uidb64, token):
     except(TypeError, ValueError, OverflowError, Account.DoesNotExist):
         user = None
     
-
     if user is not None and default_token_generator.check_token(user, token):
         user.is_active = True
         user.save()
-        return JsonResponse({'success': f"Account has been created for {user.first_name}"}, safe=False)
+        messages.success(request, f"Account has been created for {user.first_name}")
+        return redirect("/")
     else:
-        return JsonResponse({'error': f"Invalid Activation Link"}, safe=False)
+        messages.error(request, f"Invalid Activation Link")
         return redirect('/')
