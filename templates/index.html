@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+    <title>From Animation</title>
+  </head>
+  <body>
+    <div class="back_drop">
+      <div class="spin loader"></div>
+    </div>
+    <div class="message"></div>
+    <div class="container">
+      <h1>Registration</h1>
+      <form id="form" method="POST">
+        {% csrf_token %}
+        <div class="form_control">
+          <input
+            type="text"
+            class="first_name"
+            name="first_name"
+            required
+            autocomplete="off"
+          />
+          <label>First Name</label>
+        </div>
+        <div class="form_control">
+          <input
+            type="text"
+            class="last_name"
+            name="last_name"
+            required
+            autocomplete="off"
+          />
+          <label>Last Name</label>
+        </div>
+        <div class="form_control">
+          <input
+            type="text"
+            class="email"
+            name="email"
+            required
+            autocomplete="off"
+          />
+          <label>Email</label>
+        </div>
+        <div class="form_control">
+          <input
+            type="password"
+            class="pass1"
+            name="password1"
+            required
+            autocomplete="off"
+          />
+          <label>Password</label>
+        </div>
+        <div class="form_control">
+          <input
+            type="password"
+            class="pass2"
+            name="password2"
+            required
+            autocomplete="off"
+          />
+          <label>Confirm Password</label>
+        </div>
+        <button>Register</button>
+      </form>
+    </div>
+    <script src="{% static 'js/main.js' %}"></script>
+  </body>
+</html>
