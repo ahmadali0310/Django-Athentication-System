@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-$_6&603%)kv3#(=-$1c2ji-q#4nu2v^qj9@zca)=3=i7n(%7cm'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -135,13 +135,9 @@ STATICFILES_DIRS =[
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST = config('EMAIL_HOST', default="")
 EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-<<<<<<< HEAD
-EMAIL_HOST_USER = "Akhterali5323@gmail.com"
+EMAIL_PORT = config('EMAIL_PORT', cast=int)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default="")
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default="")
-=======
-EMAIL_HOST_USER = ""
-EMAIL_HOST_PASSWORD = ""
->>>>>>> 6830dff8b7ced5798211344e694be414d43b52ec
+
