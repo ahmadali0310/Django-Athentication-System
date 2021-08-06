@@ -20,5 +20,6 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", views.index, name="home"),
-    path("activate/<uidb64>/<token>", views.activate, name="activation")
+    path("activate/<uidb64>/<token>", views.activate, name="activation"),
+    path("login/", views.login, name="login")
 ]

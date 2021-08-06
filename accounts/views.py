@@ -29,26 +29,44 @@ def index(request):
 
         # * Here it will try to create instenc of user if the instenc is successfully created then
         # * it will return the success message else it will return an error message.
-        try:
-            user = Account.objects.create_user(username=username, first_name=first_name, last_name=last_name, email=email, password=password)
-            user.save()
+        if(Account._default_manager.get(email=email, is_active=False)):
+            user = Account._default_manager.get(email=email, is_active=False)
             try:
                 current_site = get_current_site(request)
                 mail_subject = "Please Activate Your Account"
                 message = render_to_string("email_verification.html", {
-                    "user": user,
-                    "domain": current_site,
-                    "uid" : urlsafe_base64_encode(force_bytes(user.pk)),
-                    "token": default_token_generator.make_token(user)
-                })
+                        "user": user,
+                        "domain": current_site,
+                        "uid" : urlsafe_base64_encode(force_bytes(user.pk)),
+                        "token": default_token_generator.make_token(user)
+                    })
                 to_email = email
                 send_email = EmailMessage(mail_subject, message, to=[to_email])
                 send_email.send()
                 return JsonResponse({'success': f"Activation Email has been sent to your Email."}, safe=False)
             except:
                 return JsonResponse({'error': f"Activation Email Has Not Been Sent"}, safe=False)
-        except:
-            return JsonResponse({'error': f"Email has been already taken"}, safe=False)
+        else:        
+            try:
+                user = Account.objects.create_user(username=username, first_name=first_name, last_name=last_name, email=email, password=password)
+                user.save()
+                try:
+                    current_site = get_current_site(request)
+                    mail_subject = "Please Activate Your Account"
+                    message = render_to_string("email_verification.html", {
+                        "user": user,
+                        "domain": current_site,
+                        "uid" : urlsafe_base64_encode(force_bytes(user.pk)),
+                        "token": default_token_generator.make_token(user)
+                    })
+                    to_email = email
+                    send_email = EmailMessage(mail_subject, message, to=[to_email])
+                    send_email.send()
+                    return JsonResponse({'success': f"Activation Email has been sent to your Email."}, safe=False)
+                except:
+                    return JsonResponse({'error': f"Activation Email Has Not Been Sent"}, safe=False)
+            except:
+                return JsonResponse({'error': f"Email has been already taken"}, safe=False)
 
 
     # * This will return if the request method is GET 
@@ -69,7 +87,13 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         messages.success(request, f"Account has been created for {user.first_name}")
-        return redirect("/")
+        return redirect("/login")
     else:
         messages.error(request, f"Invalid Activation Link")
         return redirect('/')
+
+
+
+
+def login(request):
+    return render(request, 'login.html')

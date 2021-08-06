@@ -57,6 +57,17 @@ const ValidateEmail = (input) => {
 };
 
 /**
+ * * This will remove django default Messages from the user interface.
+ */
+django_default_msg = document.querySelector(".msg");
+
+if (django_default_msg) {
+  setTimeout(() => {
+    django_default_msg.style.display = "none";
+  }, 3000);
+}
+
+/**
  * * The Event listener on form submission.
  */
 form.addEventListener("submit", (e) => {

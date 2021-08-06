@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+    <title>From Animation</title>
+  </head>
+  <body>
+    <div class="back_drop">
+      <div class="spin loader"></div>
+    </div>
+    <div class="message"></div>
+    <div ></div>
+    {% if messages %}
+      {% for message in messages  %}
+      <div {% if message.tags %} class="msg {{ message.tags }}"{% endif %}>
+        <p>{{ message }}</p>
+      </div>
+      {% endfor %}
+    {% endif %}
+    <div class="container">
+      <h1>Registration</h1>
+      <form id="form" method="POST">
+        {% csrf_token %}
+        <div class="form_control">
+          <input
+            type="text"
+            class="email"
+            name="email"
+            required
+            autocomplete="off"
+          />
+          <label>Email</label>
+        </div>
+        <div class="form_control">
+          <input
+            type="password"
+            class="pass1"
+            name="password1"
+            required
+            autocomplete="off"
+          />
+          <label>Password</label>
+        </div>
+        <button>login</button>
+      </form>
+    </div>
+    <script src="{% static 'js/main.js' %}"></script>
+  </body>
+</html>
