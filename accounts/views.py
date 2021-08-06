@@ -6,7 +6,6 @@ from django.utils.encoding import force_bytes
 import json
 
 
-
 # * Verification email
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -16,7 +15,6 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
 
 
-# Create your views here.
 
 def index(request):
     # * If the request is POST then it will collect the data from request.POST dict
@@ -29,6 +27,9 @@ def index(request):
 
         # * Here it will try to create instenc of user if the instenc is successfully created then
         # * it will return the success message else it will return an error message.
+
+        # * Here is will check the user if the user is register in the database but the account is not active then 
+        # * It will only send the activation link to the specified email
         if(Account._default_manager.get(email=email, is_active=False)):
             user = Account._default_manager.get(email=email, is_active=False)
             try:
@@ -46,12 +47,17 @@ def index(request):
                 return JsonResponse({'success': f"Activation Email has been sent to your Email."}, safe=False)
             except:
                 return JsonResponse({'error': f"Activation Email Has Not Been Sent"}, safe=False)
+        
+        # * Here it will try to create the user with the specified data if there is some error it will send the error message
+        # * Other wise it will go to next Account Activation step
         else:        
             try:
                 user = Account.objects.create_user(username=username, first_name=first_name, last_name=last_name, email=email, password=password)
                 user.save()
+                # * If the user is successfully store in the database then it will tyr to send activation link 
+                # * if there is some error it will send back the error message other wise send the success message to the user
                 try:
-                    current_site = get_current_site(request)
+                    current_site = get_current_site(request)  
                     mail_subject = "Please Activate Your Account"
                     message = render_to_string("email_verification.html", {
                         "user": user,
@@ -76,6 +82,9 @@ def index(request):
 
 
 def activate(request, uidb64, token):
+    # * In the Activation link will there is encoded primary key of that user and token
+    # * so here try to encode the primary key and get the user form the database
+    #  * if the user us not present in the database then user == None
     try:
         uid = urlsafe_base64_decode(uidb64)
         user = Account._default_manager.get(pk=uid)
@@ -83,6 +92,8 @@ def activate(request, uidb64, token):
     except(TypeError, ValueError, OverflowError, Account.DoesNotExist):
         user = None
     
+    # * if the user is present then we will check token and activate the user Account 
+    # * if token is invalid then we will redirect the user back to registration page and send invalid link message
     if user is not None and default_token_generator.check_token(user, token):
         user.is_active = True
         user.save()
