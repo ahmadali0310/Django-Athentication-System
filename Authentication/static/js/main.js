@@ -9,7 +9,6 @@ const pass1 = document.querySelector(".pass1");
 const pass2 = document.querySelector(".pass2");
 const form = document.getElementById("form");
 const csrf = document.getElementsByName("csrfmiddlewaretoken");
-console.log(csrf[0].value);
 
 /**
  *
@@ -90,7 +89,7 @@ form.addEventListener("submit", (e) => {
               // * This is for opacity transition;
               setTimeout(() => {
                 document.querySelector(".back_drop").classList.add("opacity");
-              }, 500);
+              }, 300);
 
               //* Ajax Call Axios
               axios({
@@ -196,3 +195,4 @@ form.addEventListener("submit", (e) => {
     }
   }
 });
+

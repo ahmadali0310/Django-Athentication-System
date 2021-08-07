@@ -22,14 +22,14 @@
       {% endfor %}
     {% endif %}
     <div class="container">
-      <h1>Registration</h1>
-      <form id="form" method="POST">
+      <h1>Login</h1>
+      <form id="login_form" method="POST">
         {% csrf_token %}
         <div class="form_control">
           <input
             type="text"
-            class="email"
-            name="email"
+            class="login_email"
+            name="login_email"
             required
             autocomplete="off"
           />
@@ -38,8 +38,8 @@
         <div class="form_control">
           <input
             type="password"
-            class="pass1"
-            name="password1"
+            class="login_pass1"
+            name="login_pass1"
             required
             autocomplete="off"
           />
@@ -48,6 +48,6 @@
         <button>login</button>
       </form>
     </div>
-    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/login.js' %}"></script>
   </body>
 </html>

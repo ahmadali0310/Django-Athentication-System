@@ -3,6 +3,8 @@ from django.http import JsonResponse
 from django.contrib import messages
 from .models import Account
 from django.utils.encoding import force_bytes
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 import json
 
 
@@ -30,7 +32,7 @@ def index(request):
 
         # * Here is will check the user if the user is register in the database but the account is not active then 
         # * It will only send the activation link to the specified email
-        if(Account._default_manager.get(email=email, is_active=False)):
+        if(Account._default_manager.filter(email=email, is_active=False).exists()):
             user = Account._default_manager.get(email=email, is_active=False)
             try:
                 current_site = get_current_site(request)
@@ -47,10 +49,8 @@ def index(request):
                 return JsonResponse({'success': f"Activation Email has been sent to your Email."}, safe=False)
             except:
                 return JsonResponse({'error': f"Activation Email Has Not Been Sent"}, safe=False)
-        
-        # * Here it will try to create the user with the specified data if there is some error it will send the error message
-        # * Other wise it will go to next Account Activation step
         else:        
+# * Here it will try to create the user with the specified data if there is some error it will send the error message # * Other wise it will go to next Account Activation step
             try:
                 user = Account.objects.create_user(username=username, first_name=first_name, last_name=last_name, email=email, password=password)
                 user.save()
@@ -106,5 +106,31 @@ def activate(request, uidb64, token):
 
 
 
-def login(request):
+def login_user(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        
+        user = authenticate(email=email, password=password)
+
+        if user is not None:
+            login(request, user)
+            return JsonResponse({"success": True}, safe=False)
+        else:
+            return JsonResponse({"success": False}, safe=False)
+
     return render(request, 'login.html')
+
+
+@login_required(login_url = "login")
+def logout_user(request):
+    logout(request)
+    messages.success(request, f"Logout successfully")
+    return redirect("/login")
+
+
+@login_required(login_url="login")
+def dashboard(request):
+    return render(request, 'dashBoard.html')
+
+
