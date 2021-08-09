@@ -71,6 +71,7 @@ login_form.addEventListener("submit", (e) => {
       }
     })
     .catch((err) => {
+      //  * if there is some other error then this will be executed immediately.
       document.querySelector(".back_drop").classList.remove("active");
       document.querySelector(".back_drop").classList.remove("opacity");
       // * Create the p node and add text to the this node and then append to the parent node

@@ -5,6 +5,7 @@ from .models import Account
 from django.utils.encoding import force_bytes
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from .decorators import check_admin, check_auth
 import json
 
 
@@ -17,7 +18,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
 
 
-
+@check_auth
 def index(request):
     # * If the request is POST then it will collect the data from request.POST dict
     if request.method == "POST":
@@ -105,7 +106,7 @@ def activate(request, uidb64, token):
 
 
 
-
+@check_auth
 def login_user(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -134,3 +135,7 @@ def dashboard(request):
     return render(request, 'dashBoard.html')
 
 
+@login_required(login_url="login")
+@check_admin
+def admin_dash(request):
+    return render (request, "admin.html")
